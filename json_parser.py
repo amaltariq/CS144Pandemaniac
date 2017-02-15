@@ -10,7 +10,7 @@ def parser(file_name):
 	return data
 
 def convert_to_graph(adj_lst):
-	G = nx.from_dict_of_lists(adj_lst, create_using=nx.DiGraph())
+	G = nx.from_dict_of_lists(adj_lst)
 	return G
 
 # data = parser('TestGraphs/testgraph1.json')
