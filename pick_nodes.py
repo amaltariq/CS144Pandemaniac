@@ -31,6 +31,7 @@ def pick_nodes_betweenness(in_graph, num_vals):
 
     return top_nodes
 
+# this method lost against highest degree
 def pick_most_between_and_neighbors(in_graph, num_seeds):
     most_bw_node = pick_nodes_betweenness(in_graph, 1)
     top_nodes = []
@@ -59,6 +60,8 @@ def pick_nodes_degree(in_graph, num_vals):
 
     return top_nodes
 
+# this has around 90% of the same nodes as highest degree method, wins but
+# might be random
 def pick_nodes_closeness(in_graph, num_seeds):
     closeness_values = nx.closeness_centrality(in_graph)
 
@@ -71,6 +74,8 @@ def pick_nodes_closeness(in_graph, num_seeds):
 
     return top_nodes
 
+# totally unsuccessful (tried 1/3, 1/3, 1/3 and 1/2, 1/2, 0, both lost to
+# highest degree)
 def mixed_strategy(in_graph, num_seeds):
     deg_nodes = sorted(pick_nodes_degree(in_graph, 2*num_seeds))
     between_nodes = sorted(pick_nodes_betweenness(in_graph, 2*num_seeds))
