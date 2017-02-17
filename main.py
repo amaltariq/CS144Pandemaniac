@@ -1,8 +1,10 @@
 import json_parser as jp
 import pick_nodes as pn
+import time
 
 if __name__ == '__main__':
-    file_name = '8.35.1.json'
+    start = time.time()
+    file_name = 'Day1Graphs/2.10.20.json'
 
     file_name_str = file_name.split('.')
     num_seeds = int(file_name_str[1])
@@ -11,4 +13,7 @@ if __name__ == '__main__':
     G = jp.convert_to_graph(data)
 
     top_nodes = pn.pick_seeds(G, num_seeds)
-    pn.output_nodes(top_nodes, ''.join(file_name_str[0:3]))
+    pn.output_nodes(top_nodes, ''.join(file_name_str[0:3])+'-close')
+
+    end = time.time()
+    print('Runtime ' + str(end - start))
