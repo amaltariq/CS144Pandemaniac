@@ -13,7 +13,7 @@ if __name__ == '__main__':
     G = jp.convert_to_graph(data)
 
     top_nodes = pn.pick_seeds(G, num_seeds)
-    pn.output_nodes(top_nodes, ''.join(file_name_str[0:3])+'-close')
+    pn.output_nodes(top_nodes, ''.join(file_name_str[0:3]))
 
     end = time.time()
     print('Runtime ' + str(end - start))
