@@ -3,11 +3,10 @@ import heapq
 import operator 
 
 def pick_seeds(in_graph, num_seeds):
-    if num_seeds < 3000:
+    if nx.number_of_nodes(in_graph) < 3000:
         seeds = pick_nodes_closeness(in_graph, num_seeds)
     else:
-       seeds = pick_nodes_degree(in_graph, num_seeds)
-       #seeds = pick_nodes_closeness(in_graph, num_seeds)
+        seeds = pick_nodes_degree(in_graph, num_seeds)
     return seeds
 
 def output_nodes(list_nodes, output_file):

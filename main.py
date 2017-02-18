@@ -4,7 +4,7 @@ import time
 
 if __name__ == '__main__':
     start = time.time()
-    file_name = 'Day1Graphs/2.10.20.json'
+    file_name = 'Day2Graphs/8.35.2.json'
 
     file_name_str = file_name.split('.')
     num_seeds = int(file_name_str[1])
