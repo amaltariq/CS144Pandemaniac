@@ -10,6 +10,7 @@ def pick_seeds(in_graph, num_seeds):
     seeds = weighted_seeds(in_graph, num_seeds, 1.0, 10.0, 2.0, 3.0)
     #seeds = pick_nodes_degree(in_graph, num_seeds)
     #seeds = pick_nodes_betweenness(in_graph, num_seeds)
+    #seeds = pick_nodes_pagerank(in_graph, num_seeds)
     return seeds
 
 def output_nodes(list_nodes, output_file):
@@ -18,6 +19,30 @@ def output_nodes(list_nodes, output_file):
     for i in range(50):
         for node in list_nodes:
             fo.write("%s\n" % str(node))
+
+def pick_nodes_eigenvector(in_graph, num_seeds):
+    ev_values = nx.eigenvector_centrality(in_graph)
+
+    list_ev = ev_values.items()
+
+    top_ev = heapq.nlargest(num_seeds, list_ev,
+                               key=operator.itemgetter(1))
+
+    top_nodes = [tup[0] for tup in top_ev]
+
+    return top_nodes
+
+def pick_nodes_pagerank(in_graph, num_seeds):
+    pr_values = nx.pagerank(in_graph)
+
+    list_pr = pr_values.items()
+
+    top_pr = heapq.nlargest(num_seeds, list_pr,
+                               key=operator.itemgetter(1))
+
+    top_nodes = [tup[0] for tup in top_pr]
+
+    return top_nodes
 
 def weighted_seeds(in_graph, num_seeds, w_d, w_c, w_nd, w_nc):
     node_degree = nx.degree_centrality(in_graph)
