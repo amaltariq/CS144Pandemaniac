@@ -4,7 +4,7 @@ import time
 
 if __name__ == '__main__':
     start = time.time()
-    file_name = 'Day2Graphs/2.10.21.json'
+    file_name = 'Day2Graphs/8.20.3.json'
 
     file_name_str = file_name.split('.')
     num_seeds = int(file_name_str[1])
@@ -13,7 +13,7 @@ if __name__ == '__main__':
     G = jp.convert_to_graph(data)
 
     top_nodes = pn.pick_seeds(G, num_seeds)
-    pn.output_nodes(top_nodes, ''.join(file_name_str[0:3])+'-test_weight-p4')
+    pn.output_nodes(top_nodes, ''.join(file_name_str[0:3])+'-chck')
 
     end = time.time()
     print('Runtime ' + str(end - start))
