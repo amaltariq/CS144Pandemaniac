@@ -1,12 +1,13 @@
 import networkx as nx
 import heapq
 import operator 
-
+#p1 - 1, 7, 3, 3 - won
+#p2 - 1, 10, 3, 5 - won
+#p3 - 1, 3, 5, 8 - lost
+#p4 - 1, 10, 2, 3
 def pick_seeds(in_graph, num_seeds):
-    if nx.number_of_nodes(in_graph) < 3000:
-        seeds = pick_nodes_closeness(in_graph, num_seeds)
-    else:
-        seeds = pick_nodes_degree(in_graph, num_seeds)
+    seeds = weighted_seeds(in_graph, num_seeds, 1.0, 10.0, 2.0, 3.0)
+    #seeds = pick_nodes_degree(in_graph, num_seeds)
     return seeds
 
 def output_nodes(list_nodes, output_file):
@@ -15,6 +16,50 @@ def output_nodes(list_nodes, output_file):
     for i in range(50):
         for node in list_nodes:
             fo.write("%s\n" % str(node))
+
+def weighted_seeds(in_graph, num_seeds, w_d, w_c, w_nd, w_nc):
+    node_degree = nx.degree_centrality(in_graph)
+
+    node_closeness = nx.closeness_centrality(in_graph)
+
+    adj_list = nx.to_dict_of_lists(in_graph)
+
+    sum_neighbor_degree = {}
+
+    for n in adj_list.keys():
+        nbr_list = adj_list[n]
+        sum_deg = 0
+        for nbr in nbr_list:
+            sum_deg += node_degree[nbr]
+
+        sum_neighbor_degree[n] = sum_deg
+
+    sum_neighbor_close = {}
+    for n in adj_list.keys():
+        nbr_list = adj_list[n]
+        sum_close = 0
+        for nbr in nbr_list:
+            sum_close += node_closeness[nbr]
+
+        sum_neighbor_close[n] = sum_close
+
+    norm_deg = sum(node_degree.values())
+    norm_close = sum(node_degree.values())
+    norm_deg_nbr = sum(sum_neighbor_degree.values())
+    norm_close_nbr = sum(sum_neighbor_close.values())
+
+    scores = {}
+    for n in node_degree.keys():
+        scores[n] = float(w_d) * node_degree[n] / norm_deg + float(w_c) * node_closeness[n]/norm_close \
+                    + float(w_nd) * sum_neighbor_degree[n]/norm_deg_nbr \
+                    + float(w_nc) * sum_neighbor_close[n]/norm_close_nbr
+
+    top_scores = heapq.nlargest(num_seeds, scores.items(),
+                                 key=operator.itemgetter(1))
+
+    top_nodes = [tup[0] for tup in top_scores]
+
+    return top_nodes
 
 def pick_nodes_betweenness(in_graph, num_vals):
      # Dictionary of nodes and betweenness values
