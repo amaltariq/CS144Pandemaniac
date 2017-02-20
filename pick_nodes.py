@@ -1,6 +1,7 @@
 import networkx as nx
 import heapq
-import operator 
+import operator
+from parallel_betweenness import betweenness_centrality_parallel 
 #p1 - 1, 7, 3, 3 - won
 #p2 - 1, 10, 3, 5 - won
 #p3 - 1, 3, 5, 8 - lost
@@ -8,6 +9,7 @@ import operator
 def pick_seeds(in_graph, num_seeds):
     seeds = weighted_seeds(in_graph, num_seeds, 1.0, 10.0, 2.0, 3.0)
     #seeds = pick_nodes_degree(in_graph, num_seeds)
+    #seeds = pick_nodes_betweenness(in_graph, num_seeds)
     return seeds
 
 def output_nodes(list_nodes, output_file):
@@ -25,36 +27,33 @@ def weighted_seeds(in_graph, num_seeds, w_d, w_c, w_nd, w_nc):
     adj_list = nx.to_dict_of_lists(in_graph)
 
     sum_neighbor_degree = {}
-
-    for n in adj_list.keys():
-        nbr_list = adj_list[n]
-        sum_deg = 0
-        for nbr in nbr_list:
-            sum_deg += node_degree[nbr]
-
-        sum_neighbor_degree[n] = sum_deg
-
     sum_neighbor_close = {}
+    norm_deg_nbr = 0
+    norm_close_nbr = 0
     for n in adj_list.keys():
         nbr_list = adj_list[n]
-        sum_close = 0
-        for nbr in nbr_list:
-            sum_close += node_closeness[nbr]
-
-        sum_neighbor_close[n] = sum_close
-
+        if len(nbr_list) > 1:
+            sum_deg = 0
+            sum_close = 0
+            for nbr in nbr_list:
+                sum_deg += node_degree[nbr]
+                sum_close += node_closeness[nbr]
+            sum_neighbor_degree[n] = sum_deg
+            sum_neighbor_close[n] = sum_close
+            norm_deg_nbr += sum_deg
+            norm_close_nbr += sum_close
+            
     norm_deg = sum(node_degree.values())
-    norm_close = sum(node_degree.values())
-    norm_deg_nbr = sum(sum_neighbor_degree.values())
-    norm_close_nbr = sum(sum_neighbor_close.values())
+    norm_close = sum(node_closeness.values())
 
-    scores = {}
-    for n in node_degree.keys():
-        scores[n] = float(w_d) * node_degree[n] / norm_deg + float(w_c) * node_closeness[n]/norm_close \
-                    + float(w_nd) * sum_neighbor_degree[n]/norm_deg_nbr \
-                    + float(w_nc) * sum_neighbor_close[n]/norm_close_nbr
+    scores = []
+    for n in sum_neighbor_degree.keys():
+        val = w_d * node_degree[n] / norm_deg + w_c * node_closeness[n]/norm_close \
+                    + w_nd * sum_neighbor_degree[n]/norm_deg_nbr \
+                    + w_nc * sum_neighbor_close[n]/norm_close_nbr
+        scores.append((n, val))
 
-    top_scores = heapq.nlargest(num_seeds, scores.items(),
+    top_scores = heapq.nlargest(num_seeds, scores,
                                  key=operator.itemgetter(1))
 
     top_nodes = [tup[0] for tup in top_scores]
@@ -63,8 +62,8 @@ def weighted_seeds(in_graph, num_seeds, w_d, w_c, w_nd, w_nc):
 
 def pick_nodes_betweenness(in_graph, num_vals):
      # Dictionary of nodes and betweenness values
-    betweenness_values = nx.betweenness_centrality(in_graph)
-
+    #betweenness_values = nx.betweenness_centrality(in_graph)
+    betweenness_values = betweenness_centrality_parallel(in_graph)
     list_betweenness = betweenness_values.items()   # Convert to tuple list
 
     # Get top betweenness ranked nodes and values
