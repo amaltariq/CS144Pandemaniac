@@ -10,8 +10,8 @@ The result of the simulation will be printed on the terminal with stratX being
 the Xth entry in strat_files.
 '''
 
-graph_file = 'Day2Graphs/2.10.21.json'
-strat_files = ['Day2Graphs/21021-test_weight-p4', 'Day2Graphs/21021-test_deg']
+graph_file = 'Day5Graphs/2.10.14.json'
+strat_files = ['Day5Graphs/21014-deg', 'Day5Graphs/21014-test']
 
 if __name__ == '__main__':
     with open(graph_file) as data_file:     # Get graph file as dictionary
