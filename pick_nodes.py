@@ -290,43 +290,4 @@ def pick_nodes_closeness(in_graph, num_seeds):
 
     return top_nodes
 
-# totally unsuccessful (tried 1/3, 1/3, 1/3 and 1/2, 1/2, 0, both lost to
-# highest degree)
-def mixed_strategy(in_graph, num_seeds):
-    deg_nodes = sorted(pick_nodes_degree(in_graph, 2*num_seeds))
-    between_nodes = sorted(pick_nodes_betweenness(in_graph, 2*num_seeds))
-    close_nodes = sorted(pick_nodes_closeness(in_graph, 2*num_seeds))
-
-    num_deg = num_seeds/3
-    num_bw = num_seeds/3
-    num_close = num_seeds - num_deg - num_bw
-
-    top_nodes = []
-
-    j = 0
-    for i in range(num_deg):
-        top_nodes.append(deg_nodes[j])
-        j += 1
-
-    j = 0
-    for i in range(num_bw):
-        while between_nodes[j] in top_nodes:
-            j += 1
-            if j > len(between_nodes):
-                print("j too large, between_nodes")
-        top_nodes.append(between_nodes[j])
-        j += 1
-
-    j = 0
-    for i in range(num_close):
-        while close_nodes[j] in top_nodes:
-            j += 1
-            if j > len(close_nodes):
-                print("j too large, close_nodes")
-        top_nodes.append(between_nodes[j])
-        j+= 1
-
-    assert(len(top_nodes) == num_seeds)
-    return top_nodes
-
 
