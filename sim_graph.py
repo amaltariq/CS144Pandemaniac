@@ -21,13 +21,13 @@ if __name__ == '__main__':
     num_seeds = int(file_str[1])
 
     nodes = {}
-    for i in range(len(strat_files)):       # For each strategy
+    for i in range(len(strat_files)):       # For each strategy get nodes
         with open(strat_files[i]) as strategy:
             seeds = sorted([next(strategy).strip() for x in xrange(num_seeds)])
 
         nodes['strat'+str(i)] = seeds
 
     print(nodes)
-    res = sim.run(graph, nodes)
-    print("results:\n")
+    res = sim.run(graph, nodes)             # Run simulation
+    print("results:\n")                     # Print output
     print(res)
